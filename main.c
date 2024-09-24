@@ -28,7 +28,9 @@ int totalUsers = 0;
 
 // Function prototypes
 void loadBooks();
+void loadUsers();
 void saveBooks();
+void saveUsers();
 void addBook();
 void viewBooks();
 void issueBook();
@@ -43,6 +45,7 @@ int main() {
 
     // Load existing data from files
     loadBooks();
+    loadUsers();
 
     while (1) {
         printf("\nLibrary Management System\n");
@@ -65,6 +68,7 @@ int main() {
             case 6: viewUsers(); break;
             case 7: 
                 saveBooks();
+                saveUsers();
                 exit(0); 
             default: printf("Invalid choice. Please try again.\n");
         }
@@ -75,7 +79,7 @@ int main() {
 
 // Load books from file
 void loadBooks() {
-    FILE *file = fopen("books.dat", "rb");
+    FILE *file = fopen("books.txt", "rb");
     if (file == NULL) {
         printf("No book data found. Starting fresh.\n");
         return;
@@ -86,9 +90,22 @@ void loadBooks() {
     fclose(file);
 }
 
+// Load users from file
+void loadUsers() {
+    FILE *file = fopen("users.txt", "rb");
+    if (file == NULL) {
+        printf("No user data found. Starting fresh.\n");
+        return;
+    }
+
+    fread(&totalUsers, sizeof(int), 1, file);
+    fread(users, sizeof(User), totalUsers, file);
+    fclose(file);
+}
+
 // Save books to file
 void saveBooks() {
-    FILE *file = fopen("books.dat", "wb");
+    FILE *file = fopen("books.txt", "wb");
     if (file == NULL) {
         printf("Error saving book data.\n");
         return;
@@ -96,6 +113,19 @@ void saveBooks() {
 
     fwrite(&totalBooks, sizeof(int), 1, file);
     fwrite(books, sizeof(Book), totalBooks, file);
+    fclose(file);
+}
+
+// Save users to file
+void saveUsers() {
+    FILE *file = fopen("users.txt", "wb");
+    if (file == NULL) {
+        printf("Error saving user data.\n");
+        return;
+    }
+
+    fwrite(&totalUsers, sizeof(int), 1, file);
+    fwrite(users, sizeof(User), totalUsers, file);
     fclose(file);
 }
 
