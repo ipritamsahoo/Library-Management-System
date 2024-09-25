@@ -37,11 +37,13 @@ void issueBook();
 void returnBook();
 void addUser();
 void viewUsers();
+void removeUserById(int id);
+void removeBookById(int id);
 int findBookById(int id);
 int findUserById(int id);
 
 int main() {
-    int choice;
+    int choice, id;
 
     // Load existing data from files
     loadBooks();
@@ -55,7 +57,9 @@ int main() {
         printf("4. Return Book\n");
         printf("5. Add User\n");
         printf("6. View Users\n");
-        printf("7. Exit\n");
+        printf("7. Remove User\n");
+        printf("8. Remove Book\n");
+        printf("9. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -66,7 +70,17 @@ int main() {
             case 4: returnBook(); break;
             case 5: addUser(); break;
             case 6: viewUsers(); break;
-            case 7: 
+            case 7:
+            printf("Enter User ID to remove: ");
+            scanf("%d", &id);
+            removeUserById(id);
+            break;
+        case 8:
+            printf("Enter Book ID to remove: ");
+            scanf("%d", &id);
+            removeBookById(id);
+            break;
+            case 9: 
                 saveBooks();
                 saveUsers();
                 exit(0); 
@@ -266,6 +280,45 @@ void viewUsers() {
     }
 }
 
+// Remove user by ID
+void removeUserById(int id)
+{
+    int index = findUserById(id);
+
+    if (index == -1)
+    {
+        printf("User not found.\n");
+        return;
+    }
+
+    for (int i = index; i < totalUsers - 1; i++)
+    {
+        users[i] = users[i + 1]; // Shift all users after the one to remove
+    }
+
+    totalUsers--;
+    printf("User removed successfully.\n");
+}
+
+// Remove book by ID
+void removeBookById(int id)
+{
+    int index = findBookById(id);
+
+    if (index == -1)
+    {
+        printf("Book not found.\n");
+        return;
+    }
+
+    for (int i = index; i < totalBooks - 1; i++)
+    {
+        books[i] = books[i + 1]; // Shift all books after the one to remove
+    }
+
+    totalBooks--;
+    printf("Book removed successfully.\n");
+}
 // Find book by ID
 int findBookById(int id) {
     for (int i = 0; i < totalBooks; i++) {
