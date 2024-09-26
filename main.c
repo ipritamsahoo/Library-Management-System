@@ -41,6 +41,8 @@ void removeUserById(int id);
 void removeBookById(int id);
 int findBookById(int id);
 int findUserById(int id);
+void editBookById(int id);
+void editUserById(int id);
 
 int main() {
     int choice, id;
@@ -59,7 +61,9 @@ int main() {
         printf("6. View Users\n");
         printf("7. Remove User\n");
         printf("8. Remove Book\n");
-        printf("9. Exit\n");
+        printf("9. Edit User\n");
+        printf("10. Edit Book\n");
+        printf("11. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -80,7 +84,17 @@ int main() {
             scanf("%d", &id);
             removeBookById(id);
             break;
-            case 9: 
+        case 9:
+                printf("Enter User ID to edit: ");
+                scanf("%d", &id);
+                editUserById(id);
+                break;
+            case 10:
+                printf("Enter Book ID to edit: ");
+                scanf("%d", &id);
+                editBookById(id);
+                break;
+            case 11: 
                 saveBooks();
                 saveUsers();
                 exit(0); 
@@ -337,4 +351,42 @@ int findUserById(int id) {
         }
     }
     return -1; // User not found
+}
+
+// Edit book by ID
+void editBookById(int id) {
+    int index = findBookById(id);
+
+    if (index == -1) {
+        printf("Book not found.\n");
+        return;
+    }
+
+    printf("Enter new book title: ");
+    getchar(); // Clear newline character
+    fgets(books[index].title, MAX_TITLE_LENGTH, stdin);
+    books[index].title[strlen(books[index].title) - 1] = '\0'; // Remove newline character
+
+    printf("Enter new author name: ");
+    fgets(books[index].author, MAX_TITLE_LENGTH, stdin);
+    books[index].author[strlen(books[index].author) - 1] = '\0'; // Remove newline character
+
+    printf("Book details updated successfully.\n");
+}
+
+// Edit user by ID
+void editUserById(int id) {
+    int index = findUserById(id);
+
+    if (index == -1) {
+        printf("User not found.\n");
+        return;
+    }
+
+    printf("Enter new user name: ");
+    getchar(); // Clear newline character
+    fgets(users[index].name, MAX_TITLE_LENGTH, stdin);
+    users[index].name[strlen(users[index].name) - 1] = '\0'; // Remove newline character
+
+    printf("User details updated successfully.\n");
 }
