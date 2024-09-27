@@ -5,6 +5,7 @@
 #define MAX_BOOKS 100
 #define MAX_USERS 100
 #define MAX_TITLE_LENGTH 100
+#define MAX_PHONE_LENGTH 15 // Max length for phone number
 
 // Structure to store book details
 typedef struct {
@@ -18,6 +19,7 @@ typedef struct {
 typedef struct {
     int id;
     char name[MAX_TITLE_LENGTH];
+    char phoneNumber[MAX_PHONE_LENGTH]; // New field for phone number
     int issuedBookId; // -1 if no book issued
 } User;
 
@@ -275,6 +277,10 @@ void addUser() {
     fgets(newUser.name, MAX_TITLE_LENGTH, stdin);
     newUser.name[strlen(newUser.name) - 1] = '\0'; // Remove newline character
 
+    printf("Enter user phone number: ");
+    fgets(newUser.phoneNumber, MAX_PHONE_LENGTH, stdin);
+    newUser.phoneNumber[strlen(newUser.phoneNumber) - 1] = '\0'; // Remove newline character
+
     users[totalUsers] = newUser;
     totalUsers++;
 
@@ -288,9 +294,9 @@ void viewUsers() {
         return;
     }
 
-    printf("\nID\tName\t\tIssued Book\n");
+    printf("\nID\tName\t\tPhone Number\t\tIssued Book\n");
     for (int i = 0; i < totalUsers; i++) {
-        printf("%d\t%s\t\t%d\n", users[i].id, users[i].name, users[i].issuedBookId);
+        printf("%d\t%s\t\t%s\t\t%d\n", users[i].id, users[i].name, users[i].phoneNumber, users[i].issuedBookId);
     }
 }
 
@@ -388,5 +394,9 @@ void editUserById(int id) {
     fgets(users[index].name, MAX_TITLE_LENGTH, stdin);
     users[index].name[strlen(users[index].name) - 1] = '\0'; // Remove newline character
 
+    printf("Enter new phone number: ");
+    fgets(users[index].phoneNumber, MAX_PHONE_LENGTH, stdin);
+    users[index].phoneNumber[strlen(users[index].phoneNumber) - 1] = '\0'; // Remove newline character
+    
     printf("User details updated successfully.\n");
 }
