@@ -6,12 +6,14 @@
 #define MAX_USERS 100
 #define MAX_TITLE_LENGTH 100
 #define MAX_PHONE_LENGTH 15 // Max length for phone number
+#define MAX_GENRE_LENGTH 50
 
 // Structure to store book details
 typedef struct {
     int id;
     char title[MAX_TITLE_LENGTH];
     char author[MAX_TITLE_LENGTH];
+    char genre[MAX_GENRE_LENGTH];  // New field to store the genre of the book
     int isIssued; // 1 if issued, 0 otherwise
 } Book;
 
@@ -179,6 +181,10 @@ void addBook() {
     fgets(newBook.author, MAX_TITLE_LENGTH, stdin);
     newBook.author[strlen(newBook.author) - 1] = '\0'; // Remove newline character
 
+    printf("Enter book genre: ");
+    fgets(newBook.genre, MAX_GENRE_LENGTH, stdin);
+    newBook.genre[strlen(newBook.genre) - 1] = '\0'; // Remove newline character
+
     books[totalBooks] = newBook;
     totalBooks++;
 
@@ -192,9 +198,9 @@ void viewBooks() {
         return;
     }
 
-    printf("\nID\tTitle\t\tAuthor\t\tStatus\n");
+   printf("\nID\tTitle\t\tAuthor\t\t\tGenre\t\t\tStatus\n");
     for (int i = 0; i < totalBooks; i++) {
-        printf("%d\t%s\t\t%s\t\t%s\n", books[i].id, books[i].title, books[i].author,
+        printf("%d\t%s\t\t%s\t\t%s\t\t%s\n", books[i].id, books[i].title, books[i].author, books[i].genre,
                books[i].isIssued ? "Issued" : "Available");
     }
 }
@@ -376,6 +382,10 @@ void editBookById(int id) {
     printf("Enter new author name: ");
     fgets(books[index].author, MAX_TITLE_LENGTH, stdin);
     books[index].author[strlen(books[index].author) - 1] = '\0'; // Remove newline character
+
+    printf("Enter new book genre: ");
+    fgets(books[index].genre, MAX_TITLE_LENGTH, stdin);
+    books[index].genre[strlen(books[index].genre) - 1] = '\0'; // Remove newline character
 
     printf("Book details updated successfully.\n");
 }
