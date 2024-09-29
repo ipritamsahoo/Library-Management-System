@@ -5,8 +5,12 @@
 #define MAX_BOOKS 100
 #define MAX_USERS 100
 #define MAX_TITLE_LENGTH 100
-#define MAX_PHONE_LENGTH 15 // Max length for phone number
-#define MAX_GENRE_LENGTH 50
+#define MAX_PHONE_LENGTH 100 
+#define MAX_GENRE_LENGTH 100
+
+// Admin credentials
+#define ADMIN_USERNAME "admin"
+#define ADMIN_PASSWORD "admin@123"
 
 // Structure to store book details
 typedef struct {
@@ -15,6 +19,7 @@ typedef struct {
     char author[MAX_TITLE_LENGTH];
     char genre[MAX_GENRE_LENGTH];  // New field to store the genre of the book
     int isIssued; // 1 if issued, 0 otherwise
+    float issueCost;
 } Book;
 
 // Structure to store user details
@@ -31,6 +36,7 @@ int totalBooks = 0;
 int totalUsers = 0;
 
 // Function prototypes
+int adminLogin();
 void loadBooks();
 void loadUsers();
 void saveBooks();
@@ -50,6 +56,12 @@ void editUserById(int id);
 
 int main() {
     int choice, id;
+
+    // Call the admin login function
+    if (!adminLogin()) {
+        printf("Incorrect login credentials. Access denied.\n");
+        return 0; // Terminate the program if login fails
+    }
 
     // Load existing data from files
     loadBooks();
@@ -107,6 +119,25 @@ int main() {
     }
 
     return 0;
+}
+
+// Admin login function
+int adminLogin() {
+    char username[MAX_TITLE_LENGTH];
+    char password[MAX_TITLE_LENGTH];
+
+    printf("Admin Login\n");
+    printf("Username: ");
+    scanf("%s", username);
+    printf("Password: ");
+    scanf("%s", password);
+
+    if (strcmp(username, ADMIN_USERNAME) == 0 && strcmp(password, ADMIN_PASSWORD) == 0) {
+        printf("Login successful. Welcome, Admin!\n");
+        return 1; // Login successful
+    } else {
+        return 0; // Login failed
+    }
 }
 
 // Load books from file
@@ -185,6 +216,9 @@ void addBook() {
     fgets(newBook.genre, MAX_GENRE_LENGTH, stdin);
     newBook.genre[strlen(newBook.genre) - 1] = '\0'; // Remove newline character
 
+    printf("Enter issue cost for the book: ");
+    scanf("%f", &newBook.issueCost);
+
     books[totalBooks] = newBook;
     totalBooks++;
 
@@ -198,9 +232,9 @@ void viewBooks() {
         return;
     }
 
-   printf("\nID\tTitle\t\tAuthor\t\t\tGenre\t\t\tStatus\n");
+    printf("\nID\tTitle\t\tAuthor\t\tGenre\t\tCost\t\tStatus\n");
     for (int i = 0; i < totalBooks; i++) {
-        printf("%d\t%s\t\t%s\t\t%s\t\t%s\n", books[i].id, books[i].title, books[i].author, books[i].genre,
+        printf("%d\t%s\t\t%s\t%s\t%.2f\t\t%s\n", books[i].id, books[i].title, books[i].author, books[i].genre, books[i].issueCost,
                books[i].isIssued ? "Issued" : "Available");
     }
 }
@@ -386,6 +420,9 @@ void editBookById(int id) {
     printf("Enter new book genre: ");
     fgets(books[index].genre, MAX_TITLE_LENGTH, stdin);
     books[index].genre[strlen(books[index].genre) - 1] = '\0'; // Remove newline character
+
+    printf("Enter issue cost for the book: ");
+    scanf("%f", &books[index].issueCost);
 
     printf("Book details updated successfully.\n");
 }
