@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_BOOKS 100
-#define MAX_USERS 100
 #define MAX_TITLE_LENGTH 100
 #define MAX_PHONE_LENGTH 100 
 #define MAX_GENRE_LENGTH 100
@@ -30,10 +28,13 @@ typedef struct {
     int issuedBookId; // -1 if no book issued
 } User;
 
-Book books[MAX_BOOKS];
-User users[MAX_USERS];
+// Dynamic arrays for books and users
+Book* books = NULL;
+User* users = NULL;
 int totalBooks = 0;
 int totalUsers = 0;
+int bookCapacity = 10; // Initial capacity for books
+int userCapacity = 10; // Initial capacity for users
 
 // Function prototypes
 int adminLogin();
@@ -53,9 +54,15 @@ int findBookById(int id);
 int findUserById(int id);
 void editBookById(int id);
 void editUserById(int id);
+void increaseBookCapacity();
+void increaseUserCapacity();
 
 int main() {
     int choice, id;
+
+    // Initialize dynamic arrays
+    books = (Book*) malloc(bookCapacity * sizeof(Book));
+    users = (User*) malloc(userCapacity * sizeof(User));
 
     // Call the admin login function
     if (!adminLogin()) {
@@ -113,6 +120,9 @@ int main() {
             case 11: 
                 saveBooks();
                 saveUsers();
+                 // Free allocated memory
+                free(books);
+                free(users);
                 exit(0); 
             default: printf("Invalid choice. Please try again.\n");
         }
@@ -137,6 +147,26 @@ int adminLogin() {
         return 1; // Login successful
     } else {
         return 0; // Login failed
+    }
+}
+
+// Increase capacity for books if needed
+void increaseBookCapacity() {
+    bookCapacity *= 2;
+    books = (Book*) realloc(books, bookCapacity * sizeof(Book));
+    if (!books) {
+        printf("Memory allocation failed for books.\n");
+        exit(1); // Exit if memory allocation fails
+    }
+}
+
+// Increase capacity for users if needed
+void increaseUserCapacity() {
+    userCapacity *= 2;
+    users = (User*) realloc(users, userCapacity * sizeof(User));
+    if (!users) {
+        printf("Memory allocation failed for users.\n");
+        exit(1); // Exit if memory allocation fails
     }
 }
 
@@ -194,9 +224,8 @@ void saveUsers() {
 
 // Add a new book to the library
 void addBook() {
-    if (totalBooks >= MAX_BOOKS) {
-        printf("Library is full, cannot add more books.\n");
-        return;
+    if (totalBooks >= bookCapacity) {
+        increaseBookCapacity(); // Increase capacity if limit is reached
     }
 
     Book newBook;
@@ -303,9 +332,8 @@ void returnBook() {
 
 // Add a new user to the system
 void addUser() {
-    if (totalUsers >= MAX_USERS) {
-        printf("Maximum users reached. Cannot add more users.\n");
-        return;
+    if (totalUsers >= userCapacity) {
+        increaseUserCapacity(); // Increase capacity if limit is reached
     }
 
     User newUser;
