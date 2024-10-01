@@ -6,10 +6,6 @@
 #define MAX_PHONE_LENGTH 100 
 #define MAX_GENRE_LENGTH 100
 
-// Admin credentials
-#define ADMIN_USERNAME "admin"
-#define ADMIN_PASSWORD "admin@123"
-
 // Structure to store book details
 typedef struct {
     int id;
@@ -38,6 +34,7 @@ int userCapacity = 10; // Initial capacity for users
 
 // Function prototypes
 int adminLogin();
+int readCredentials(char *username, char *password);
 void loadBooks();
 void loadUsers();
 void saveBooks();
@@ -135,6 +132,12 @@ int main() {
 int adminLogin() {
     char username[MAX_TITLE_LENGTH];
     char password[MAX_TITLE_LENGTH];
+    char adminUsername[MAX_TITLE_LENGTH];
+    char adminPassword[MAX_TITLE_LENGTH];
+
+    if (!readCredentials(adminUsername, adminPassword)) {
+        return 0; // Failed to load credentials
+    }
 
     printf("Admin Login\n");
     printf("Username: ");
@@ -142,13 +145,30 @@ int adminLogin() {
     printf("Password: ");
     scanf("%s", password);
 
-    if (strcmp(username, ADMIN_USERNAME) == 0 && strcmp(password, ADMIN_PASSWORD) == 0) {
+    if (strcmp(username, adminUsername) == 0 && strcmp(password, adminPassword) == 0) {
         printf("Login successful. Welcome, Admin!\n");
         return 1; // Login successful
     } else {
+        printf("Incorrect login credentials.\n");
         return 0; // Login failed
     }
 }
+
+// Function to read credentials from a config file
+int readCredentials(char* username, char* password) {
+    FILE *file = fopen("config.txt", "r");
+    if (file == NULL) {
+        printf("Error opening config file.\n");
+        return 0;
+    }
+
+    fscanf(file, "ADMIN_USERNAME=%s\n", username);
+    fscanf(file, "ADMIN_PASSWORD=%s\n", password);
+
+    fclose(file);
+    return 1;
+}
+
 
 // Increase capacity for books if needed
 void increaseBookCapacity() {
