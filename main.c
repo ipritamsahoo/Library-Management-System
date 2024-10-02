@@ -63,7 +63,6 @@ int main() {
 
     // Call the admin login function
     if (!adminLogin()) {
-        printf("Incorrect login credentials. Access denied.\n");
         return 0; // Terminate the program if login fails
     }
 
@@ -149,7 +148,7 @@ int adminLogin() {
         printf("Login successful. Welcome, Admin!\n");
         return 1; // Login successful
     } else {
-        printf("Incorrect login credentials.\n");
+        printf("Incorrect login credentials. Access denied.\n");
         return 0; // Login failed
     }
 }
