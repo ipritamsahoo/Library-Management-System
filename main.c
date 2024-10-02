@@ -11,7 +11,7 @@ typedef struct {
     int id;
     char title[MAX_TITLE_LENGTH];
     char author[MAX_TITLE_LENGTH];
-    char genre[MAX_GENRE_LENGTH];  // New field to store the genre of the book
+    char genre[MAX_GENRE_LENGTH];  
     int isIssued; // 1 if issued, 0 otherwise
     float issueCost;
 } Book;
@@ -20,7 +20,7 @@ typedef struct {
 typedef struct {
     int id;
     char name[MAX_TITLE_LENGTH];
-    char phoneNumber[MAX_PHONE_LENGTH]; // New field for phone number
+    char phoneNumber[MAX_PHONE_LENGTH]; 
     int issuedBookId; // -1 if no book issued
 } User;
 
