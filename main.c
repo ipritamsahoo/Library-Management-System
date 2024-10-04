@@ -3,30 +3,32 @@
 #include <string.h>
 
 #define MAX_TITLE_LENGTH 100
-#define MAX_PHONE_LENGTH 100 
+#define MAX_PHONE_LENGTH 100
 #define MAX_GENRE_LENGTH 100
 
 // Structure to store book details
-typedef struct {
+typedef struct
+{
     int id;
     char title[MAX_TITLE_LENGTH];
     char author[MAX_TITLE_LENGTH];
-    char genre[MAX_GENRE_LENGTH];  
+    char genre[MAX_GENRE_LENGTH];
     int isIssued; // 1 if issued, 0 otherwise
     float issueCost;
 } Book;
 
 // Structure to store user details
-typedef struct {
+typedef struct
+{
     int id;
     char name[MAX_TITLE_LENGTH];
-    char phoneNumber[MAX_PHONE_LENGTH]; 
+    char phoneNumber[MAX_PHONE_LENGTH];
     int issuedBookId; // -1 if no book issued
 } User;
 
 // Dynamic arrays for books and users
-Book* books = NULL;
-User* users = NULL;
+Book *books = NULL;
+User *users = NULL;
 int totalBooks = 0;
 int totalUsers = 0;
 int bookCapacity = 10; // Initial capacity for books
@@ -54,15 +56,17 @@ void editUserById(int id);
 void increaseBookCapacity();
 void increaseUserCapacity();
 
-int main() {
+int main()
+{
     int choice, id;
 
     // Initialize dynamic arrays
-    books = (Book*) malloc(bookCapacity * sizeof(Book));
-    users = (User*) malloc(userCapacity * sizeof(User));
+    books = (Book *)malloc(bookCapacity * sizeof(Book));
+    users = (User *)malloc(userCapacity * sizeof(User));
 
     // Call the admin login function
-    if (!adminLogin()) {
+    if (!adminLogin())
+    {
         return 0; // Terminate the program if login fails
     }
 
@@ -70,7 +74,8 @@ int main() {
     loadBooks();
     loadUsers();
 
-    while (1) {
+    while (1)
+    {
         printf("\nLibrary Management System\n");
         printf("1. Add Book\n");
         printf("2. View Books\n");
@@ -86,14 +91,27 @@ int main() {
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
-        switch (choice) {
-            case 1: addBook(); break;
-            case 2: viewBooks(); break;
-            case 3: issueBook(); break;
-            case 4: returnBook(); break;
-            case 5: addUser(); break;
-            case 6: viewUsers(); break;
-            case 7:
+        switch (choice)
+        {
+        case 1:
+            addBook();
+            break;
+        case 2:
+            viewBooks();
+            break;
+        case 3:
+            issueBook();
+            break;
+        case 4:
+            returnBook();
+            break;
+        case 5:
+            addUser();
+            break;
+        case 6:
+            viewUsers();
+            break;
+        case 7:
             printf("Enter User ID to remove: ");
             scanf("%d", &id);
             removeUserById(id);
@@ -104,23 +122,24 @@ int main() {
             removeBookById(id);
             break;
         case 9:
-                printf("Enter User ID to edit: ");
-                scanf("%d", &id);
-                editUserById(id);
-                break;
-            case 10:
-                printf("Enter Book ID to edit: ");
-                scanf("%d", &id);
-                editBookById(id);
-                break;
-            case 11: 
-                saveBooks();
-                saveUsers();
-                 // Free allocated memory
-                free(books);
-                free(users);
-                exit(0); 
-            default: printf("Invalid choice. Please try again.\n");
+            printf("Enter User ID to edit: ");
+            scanf("%d", &id);
+            editUserById(id);
+            break;
+        case 10:
+            printf("Enter Book ID to edit: ");
+            scanf("%d", &id);
+            editBookById(id);
+            break;
+        case 11:
+            saveBooks();
+            saveUsers();
+            // Free allocated memory
+            free(books);
+            free(users);
+            exit(0);
+        default:
+            printf("Invalid choice. Please try again.\n");
         }
     }
 
@@ -128,13 +147,15 @@ int main() {
 }
 
 // Admin login function
-int adminLogin() {
+int adminLogin()
+{
     char username[MAX_TITLE_LENGTH];
     char password[MAX_TITLE_LENGTH];
     char adminUsername[MAX_TITLE_LENGTH];
     char adminPassword[MAX_TITLE_LENGTH];
 
-    if (!readCredentials(adminUsername, adminPassword)) {
+    if (!readCredentials(adminUsername, adminPassword))
+    {
         return 0; // Failed to load credentials
     }
 
@@ -144,19 +165,24 @@ int adminLogin() {
     printf("Password: ");
     scanf("%s", password);
 
-    if (strcmp(username, adminUsername) == 0 && strcmp(password, adminPassword) == 0) {
+    if (strcmp(username, adminUsername) == 0 && strcmp(password, adminPassword) == 0)
+    {
         printf("Login successful. Welcome, Admin!\n");
         return 1; // Login successful
-    } else {
+    }
+    else
+    {
         printf("Incorrect login credentials. Access denied.\n");
         return 0; // Login failed
     }
 }
 
 // Function to read credentials from a config file
-int readCredentials(char* username, char* password) {
+int readCredentials(char *username, char *password)
+{
     FILE *file = fopen("config.txt", "r");
-    if (file == NULL) {
+    if (file == NULL)
+    {
         printf("Error opening config file.\n");
         return 0;
     }
@@ -168,31 +194,36 @@ int readCredentials(char* username, char* password) {
     return 1;
 }
 
-
 // Increase capacity for books if needed
-void increaseBookCapacity() {
+void increaseBookCapacity()
+{
     bookCapacity *= 2;
-    books = (Book*) realloc(books, bookCapacity * sizeof(Book));
-    if (!books) {
+    books = (Book *)realloc(books, bookCapacity * sizeof(Book));
+    if (!books)
+    {
         printf("Memory allocation failed for books.\n");
         exit(1); // Exit if memory allocation fails
     }
 }
 
 // Increase capacity for users if needed
-void increaseUserCapacity() {
+void increaseUserCapacity()
+{
     userCapacity *= 2;
-    users = (User*) realloc(users, userCapacity * sizeof(User));
-    if (!users) {
+    users = (User *)realloc(users, userCapacity * sizeof(User));
+    if (!users)
+    {
         printf("Memory allocation failed for users.\n");
         exit(1); // Exit if memory allocation fails
     }
 }
 
 // Load books from file
-void loadBooks() {
+void loadBooks()
+{
     FILE *file = fopen("books.txt", "rb");
-    if (file == NULL) {
+    if (file == NULL)
+    {
         printf("No book data found. Starting fresh.\n");
         return;
     }
@@ -203,9 +234,11 @@ void loadBooks() {
 }
 
 // Load users from file
-void loadUsers() {
+void loadUsers()
+{
     FILE *file = fopen("users.txt", "rb");
-    if (file == NULL) {
+    if (file == NULL)
+    {
         printf("No user data found. Starting fresh.\n");
         return;
     }
@@ -216,9 +249,11 @@ void loadUsers() {
 }
 
 // Save books to file
-void saveBooks() {
+void saveBooks()
+{
     FILE *file = fopen("books.txt", "wb");
-    if (file == NULL) {
+    if (file == NULL)
+    {
         printf("Error saving book data.\n");
         return;
     }
@@ -229,9 +264,11 @@ void saveBooks() {
 }
 
 // Save users to file
-void saveUsers() {
+void saveUsers()
+{
     FILE *file = fopen("users.txt", "wb");
-    if (file == NULL) {
+    if (file == NULL)
+    {
         printf("Error saving user data.\n");
         return;
     }
@@ -242,8 +279,10 @@ void saveUsers() {
 }
 
 // Add a new book to the library
-void addBook() {
-    if (totalBooks >= bookCapacity) {
+void addBook()
+{
+    if (totalBooks >= bookCapacity)
+    {
         increaseBookCapacity(); // Increase capacity if limit is reached
     }
 
@@ -274,21 +313,25 @@ void addBook() {
 }
 
 // View all books in the library
-void viewBooks() {
-    if (totalBooks == 0) {
+void viewBooks()
+{
+    if (totalBooks == 0)
+    {
         printf("No books available in the library.\n");
         return;
     }
 
     printf("\nID\tTitle\t\tAuthor\t\tGenre\t\tCost\t\tStatus\n");
-    for (int i = 0; i < totalBooks; i++) {
+    for (int i = 0; i < totalBooks; i++)
+    {
         printf("%d\t%s\t\t%s\t%s\t%.2f\t\t%s\n", books[i].id, books[i].title, books[i].author, books[i].genre, books[i].issueCost,
                books[i].isIssued ? "Issued" : "Available");
     }
 }
 
 // Issue a book to a user
-void issueBook() {
+void issueBook()
+{
     int bookId, userId;
     printf("Enter user ID: ");
     scanf("%d", &userId);
@@ -298,17 +341,20 @@ void issueBook() {
     int bookIndex = findBookById(bookId);
     int userIndex = findUserById(userId);
 
-    if (bookIndex == -1) {
+    if (bookIndex == -1)
+    {
         printf("Book not found.\n");
         return;
     }
 
-    if (userIndex == -1) {
+    if (userIndex == -1)
+    {
         printf("User not found.\n");
         return;
     }
 
-    if (books[bookIndex].isIssued) {
+    if (books[bookIndex].isIssued)
+    {
         printf("Book is already issued.\n");
         return;
     }
@@ -319,7 +365,8 @@ void issueBook() {
 }
 
 // Return a book
-void returnBook() {
+void returnBook()
+{
     int bookId, userId;
     printf("Enter user ID: ");
     scanf("%d", &userId);
@@ -329,17 +376,20 @@ void returnBook() {
     int bookIndex = findBookById(bookId);
     int userIndex = findUserById(userId);
 
-    if (bookIndex == -1) {
+    if (bookIndex == -1)
+    {
         printf("Book not found.\n");
         return;
     }
 
-    if (userIndex == -1) {
+    if (userIndex == -1)
+    {
         printf("User not found.\n");
         return;
     }
 
-    if (users[userIndex].issuedBookId != bookId) {
+    if (users[userIndex].issuedBookId != bookId)
+    {
         printf("This user did not issue this book.\n");
         return;
     }
@@ -350,8 +400,10 @@ void returnBook() {
 }
 
 // Add a new user to the system
-void addUser() {
-    if (totalUsers >= userCapacity) {
+void addUser()
+{
+    if (totalUsers >= userCapacity)
+    {
         increaseUserCapacity(); // Increase capacity if limit is reached
     }
 
@@ -375,14 +427,17 @@ void addUser() {
 }
 
 // View all users
-void viewUsers() {
-    if (totalUsers == 0) {
+void viewUsers()
+{
+    if (totalUsers == 0)
+    {
         printf("No users registered.\n");
         return;
     }
 
     printf("\nID\tName\t\tPhone Number\t\tIssued Book\n");
-    for (int i = 0; i < totalUsers; i++) {
+    for (int i = 0; i < totalUsers; i++)
+    {
         printf("%d\t%s\t\t%s\t\t%d\n", users[i].id, users[i].name, users[i].phoneNumber, users[i].issuedBookId);
     }
 }
@@ -427,9 +482,12 @@ void removeBookById(int id)
     printf("Book removed successfully.\n");
 }
 // Find book by ID
-int findBookById(int id) {
-    for (int i = 0; i < totalBooks; i++) {
-        if (books[i].id == id) {
+int findBookById(int id)
+{
+    for (int i = 0; i < totalBooks; i++)
+    {
+        if (books[i].id == id)
+        {
             return i;
         }
     }
@@ -437,9 +495,12 @@ int findBookById(int id) {
 }
 
 // Find user by ID
-int findUserById(int id) {
-    for (int i = 0; i < totalUsers; i++) {
-        if (users[i].id == id) {
+int findUserById(int id)
+{
+    for (int i = 0; i < totalUsers; i++)
+    {
+        if (users[i].id == id)
+        {
             return i;
         }
     }
@@ -447,10 +508,12 @@ int findUserById(int id) {
 }
 
 // Edit book by ID
-void editBookById(int id) {
+void editBookById(int id)
+{
     int index = findBookById(id);
 
-    if (index == -1) {
+    if (index == -1)
+    {
         printf("Book not found.\n");
         return;
     }
@@ -475,10 +538,12 @@ void editBookById(int id) {
 }
 
 // Edit user by ID
-void editUserById(int id) {
+void editUserById(int id)
+{
     int index = findUserById(id);
 
-    if (index == -1) {
+    if (index == -1)
+    {
         printf("User not found.\n");
         return;
     }
@@ -491,6 +556,6 @@ void editUserById(int id) {
     printf("Enter new phone number: ");
     fgets(users[index].phoneNumber, MAX_PHONE_LENGTH, stdin);
     users[index].phoneNumber[strlen(users[index].phoneNumber) - 1] = '\0'; // Remove newline character
-    
+
     printf("User details updated successfully.\n");
 }
